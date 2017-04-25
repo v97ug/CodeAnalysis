@@ -1,5 +1,6 @@
 .idea/
 infiles/
 !infiles/link.txt
+!infiles/get_API_code.rb
 target/
 project/

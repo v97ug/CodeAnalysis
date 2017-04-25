@@ -1,1 +1,4 @@
 http://twitter4j.org/archive/twitter4j-4.0.4.zip
+http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.8.0/hadoop-2.8.0-src.tar.gz
+http://spark.apache.org/downloads.html
+https://github.com/facebook/facebook-android-sdk
