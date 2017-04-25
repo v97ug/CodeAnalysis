@@ -1,4 +1,5 @@
 .idea/
+infiles/
 !infiles/link.txt
 target/
 project/
