@@ -45,19 +45,20 @@ class MethodCallVisitor extends VoidVisitorAdapter<Integer> {
 
     @Override
     public void visit(final ClassOrInterfaceDeclaration n, final Integer depth) {
-        System.out.printf("Class %s %s\n", StringUtil.nTabs(depth), n.getName());
+        System.out.printf("Class%s %s\n", StringUtil.nTabs(depth), n.getName());
         super.visit(n, depth + 1);
     }
 
     @Override
     public void visit(MethodDeclaration methodDeclaration, Integer depth) {
-        System.out.printf("%s%s \n",StringUtil.nTabs(depth), methodDeclaration.getName());
+        System.out.printf("%s %s\n",StringUtil.nTabs(depth), methodDeclaration.getName());
         super.visit(methodDeclaration, depth + 1);
     }
 
     @Override
     public void visit(final MethodCallExpr n, final Integer depth) {
-        System.out.printf("%s %s %s\n",StringUtil.nTabs(depth), n.getScope().orElse(null), n.getName());
+        String variableName = n.getScope().orElse(null) != null ? n.getScope().orElse(null).toString() : "";
+        System.out.printf("%s %s %s\n",StringUtil.nTabs(depth), variableName, n.getName());
         super.visit(n, depth + 1);
     }
 
