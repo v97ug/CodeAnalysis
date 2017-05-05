@@ -1,6 +1,6 @@
-join_str = File.read("method-parsed.txt")
+join_str = File.read("java-parsed.txt")
     .gsub("\n"," ")
     .gsub(/\t+/," ")
     .gsub(/ +/," ")
 
-File.write("join-result/method-joined.txt",join_str)
+File.write("join-result/parsed-joined.txt",join_str)
