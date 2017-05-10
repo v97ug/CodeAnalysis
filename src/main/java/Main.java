@@ -7,7 +7,6 @@ import java.io.*;
  * Created by Ryo on 2017/04/21.
  */
 
-
 public class Main {
 
     public static void main(String[] args) throws IOException {
@@ -18,18 +17,14 @@ public class Main {
         String codeInfo = parseJavaCode.getCodeInfo();
         String methodNames = parseJavaCode.getMethodNames();
 
-        File parsedFile = new File("result/java-parsed.txt");
-        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(parsedFile)));
-        pw.println(codeInfo);
-        pw.close();
+        writeFile("result/java-parsed.txt", codeInfo);
+        writeFile("result/method-names.txt", methodNames);
+    }
 
-        File methodNamesFile = new File("result/method-names.txt");
-        PrintWriter pw2 = new PrintWriter(new BufferedWriter(new FileWriter(methodNamesFile)));
-        pw2.println(methodNames);
-        pw2.close();
+    public static void writeFile(String filePass, String contents) throws IOException {
+        File parsedFile = new File(filePass);
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(parsedFile)));
+        pw.println(contents);
+        pw.close();
     }
 }
-
-
-
-
