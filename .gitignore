@@ -4,3 +4,6 @@ infiles/*
 !infiles/get_API_code.rb
 target/
 project/
+result/*
+!result/join.rb
+!result/join-result/
