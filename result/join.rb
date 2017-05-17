@@ -1,4 +1,4 @@
-join_str = File.read("java-parsed.txt")
+join_str = File.read("all-java-parsed.txt")
     .gsub("\n"," ")
     .gsub(/\t+/," ")
     .gsub(/ +/," ")
