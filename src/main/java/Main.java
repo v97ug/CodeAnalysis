@@ -2,7 +2,6 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
 import java.io.*;
-import java.util.Arrays;
 
 /**
  * Created by Ryo on 2017/04/21.
@@ -24,22 +23,29 @@ public class Main {
 
             System.out.println(apiFilePass);
 
-            //ファイル出力
-            // 例えば、./infiles/hellocharts-android/...../LineChartActivity.javaのようになってる
-            String[] passSplited = apiFilePass.split("/");
-            String apiName = passSplited[2];
-            String javaName = passSplited[passSplited.length - 1].split("\\.")[0];
-
-            Process process = Runtime.getRuntime().exec(String.format("mkdir -p result/all-files/%s/%s/", apiName, javaName));
-            int ret = process.waitFor(); // プロセスの終了を待つ
-            String javaParseedFile = String.format("result/all-files/%s/%s/java-parsed.txt", apiName,javaName);
-            String methodNamesFile = String.format("result/all-files/%s/%s/method-names.txt", apiName, javaName);
-            writeFile(javaParseedFile, codeInfo);
-            writeFile(methodNamesFile, methodNames);
+            mkdirAndWriteFile(apiFilePass, codeInfo, methodNames);
         }
     }
 
-    public static void writeFile(String filePass, String contents) throws IOException {
+    private static void mkdirAndWriteFile(String apiFilePass, String codeInfo, String methodNames)
+            throws IOException, InterruptedException{
+        // 例えば、./infiles/hellocharts-android/...../LineChartActivity.javaのようになってる
+        String[] passSplited = apiFilePass.split("/");
+        String apiName = passSplited[2];
+        String javaName = passSplited[passSplited.length - 1].split("\\.")[0];
+
+        //ディレクトリ作成
+        Process process = Runtime.getRuntime().exec(String.format("mkdir -p result/all-files/%s/%s/", apiName, javaName));
+        int ret = process.waitFor(); // プロセスの終了を待つ
+
+        //ファイル出力
+        String javaParseedFile = String.format("result/all-files/%s/%s/java-parsed.txt", apiName,javaName);
+        String methodNamesFile = String.format("result/all-files/%s/%s/method-names.txt", apiName, javaName);
+        writeFile(javaParseedFile, codeInfo);
+        writeFile(methodNamesFile, methodNames);
+    }
+
+    private static void writeFile(String filePass, String contents) throws IOException {
         File parsedFile = new File(filePass);
         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(parsedFile)));
         pw.println(contents);
