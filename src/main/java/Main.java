@@ -1,8 +1,10 @@
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
-import java.io.*;
-import java.lang.reflect.Array;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
@@ -11,25 +13,44 @@ import java.util.ArrayList;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException{
         Process p = Runtime.getRuntime().exec("find ./infiles/ -name *.java");
         BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
         String apiFilePass;
         while ((apiFilePass = br.readLine()) != null) {
-            FileInputStream fileInputStream = new FileInputStream(apiFilePass);
-            CompilationUnit cu = JavaParser.parse(fileInputStream);
-
-            ParseJavaCode parseJavaCode = new ParseJavaCode(cu);
-            String codeInfo = parseJavaCode.getCodeInfo();
-            String methodNames = parseJavaCode.getMethodNames();
-
             System.out.println(apiFilePass);
 
-//            mkdirAndWriteFile(apiFilePass, codeInfo, methodNames);
+            parseAndWriteFile(apiFilePass);
+            writeMethodInfo(apiFilePass);
+        }
+    }
 
-            ArrayList<String> methodInfo = parseJavaCode.getMethodsInfo();
+    private static void parseAndWriteFile(String apiFilePass) throws IOException{
+        FileInputStream fileInputStream = new FileInputStream(apiFilePass);
+        CompilationUnit cu = JavaParser.parse(fileInputStream);
+
+        ParseJavaCode parseJavaCode = new ParseJavaCode(cu);
+        String codeInfo = parseJavaCode.getCodeInfo();
+        String methodNames = parseJavaCode.getMethodNames();
+
+        try {
+            mkdirAndWriteFile(apiFilePass, codeInfo, methodNames);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void writeMethodInfo(String apiFilePass) throws IOException{
+        FileInputStream fileInputStream = new FileInputStream(apiFilePass);
+        CompilationUnit cu = JavaParser.parse(fileInputStream);
+
+        ParseMethodInfo parseMethodInfo = new ParseMethodInfo(cu);
+
+        ArrayList<String> methodInfo = parseMethodInfo.getMethodsInfo();
+        try {
             mkdirAndWriteFile(apiFilePass, methodInfo);
-
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -42,7 +63,7 @@ public class Main {
 
         //ディレクトリ作成
         Process process = Runtime.getRuntime().exec(String.format("mkdir -p result2/all-files/%s/%s/", apiName, javaName));
-        int ret = process.waitFor(); // プロセスの終了を待つ
+        process.waitFor(); // プロセスの終了を待つ
 
         for(String methodInfo : methodInfoList) {
             String methodInfoFile = String.format("result2/all-files/%s/%s/%s.txt", apiName, javaName, methodInfo.split("\n")[1]);

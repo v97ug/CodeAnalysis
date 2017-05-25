@@ -14,7 +14,6 @@ import java.util.ArrayList;
 class ParseJavaCode {
     private String codeInfo = ""; //副作用あり。逐次、ここに代入する
     private String methodNames = ""; //副作用あり。逐次、ここに代入する
-    private ArrayList<String> methods = new ArrayList<>();
 
     ParseJavaCode(CompilationUnit cu){
         new MethodCallVisitor().visit(cu,0);
@@ -26,10 +25,6 @@ class ParseJavaCode {
 
     String getMethodNames(){
         return methodNames;
-    }
-
-    public ArrayList<String> getMethodsInfo(){
-        return methods;
     }
 
     class MethodCallVisitor extends VoidVisitorAdapter<Integer> {
@@ -45,15 +40,6 @@ class ParseJavaCode {
             codeInfo += String.format("%s %s\n", StringUtil.nTabs(depth), declaration.getName());
             methodNames += String.format("%s\n", declaration.getName());
             super.visit(declaration, depth + 1);
-
-            String paramTypes = "";
-            for (Parameter p : declaration.getParameters()){
-                String paramType = p.toString().split(" ")[0];
-                paramTypes += paramType + ",";
-            }
-
-            String methodInfo = String.format("%s\n%s\n%s\n%s\n", declaration.getType(), declaration.getName(), paramTypes, declaration.getBody().orElse(null));
-            methods.add(methodInfo);
         }
 
         @Override
