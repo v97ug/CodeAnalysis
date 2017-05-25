@@ -1,9 +1,12 @@
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+
+import java.util.ArrayList;
 
 /**
  * Created by takeyuki on 17/04/29.
@@ -11,6 +14,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 class ParseJavaCode {
     private String codeInfo = ""; //副作用あり。逐次、ここに代入する
     private String methodNames = ""; //副作用あり。逐次、ここに代入する
+    private ArrayList<String> methods = new ArrayList<>();
 
     ParseJavaCode(CompilationUnit cu){
         new MethodCallVisitor().visit(cu,0);
@@ -24,6 +28,10 @@ class ParseJavaCode {
         return methodNames;
     }
 
+    public ArrayList<String> getMethodsInfo(){
+        return methods;
+    }
+
     class MethodCallVisitor extends VoidVisitorAdapter<Integer> {
 
         @Override
@@ -33,10 +41,19 @@ class ParseJavaCode {
         }
 
         @Override
-        public void visit(MethodDeclaration methodDeclaration, Integer depth) {
-            codeInfo += String.format("%s %s\n", StringUtil.nTabs(depth), methodDeclaration.getName());
-            methodNames += String.format("%s\n", methodDeclaration.getName());
-            super.visit(methodDeclaration, depth + 1);
+        public void visit(MethodDeclaration declaration, Integer depth) {
+            codeInfo += String.format("%s %s\n", StringUtil.nTabs(depth), declaration.getName());
+            methodNames += String.format("%s\n", declaration.getName());
+            super.visit(declaration, depth + 1);
+
+            String paramTypes = "";
+            for (Parameter p : declaration.getParameters()){
+                String paramType = p.toString().split(" ")[0];
+                paramTypes += paramType + ",";
+            }
+
+            String methodInfo = String.format("%s\n%s\n%s\n%s\n", declaration.getType(), declaration.getName(), paramTypes, declaration.getBody().orElse(null));
+            methods.add(methodInfo);
         }
 
         @Override

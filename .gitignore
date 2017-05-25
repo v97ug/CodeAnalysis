@@ -7,3 +7,4 @@ project/
 result/*
 !result/join.rb
 !result/join-result/
+result2/*
