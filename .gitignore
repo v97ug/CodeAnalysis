@@ -9,3 +9,4 @@ result/*
 !result/join-result/
 !result/all-method-names.txt
 !result/all-file-cat.sh
+result2/*

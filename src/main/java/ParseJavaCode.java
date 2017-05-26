@@ -1,9 +1,12 @@
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+
+import java.util.ArrayList;
 
 /**
  * Created by takeyuki on 17/04/29.
@@ -33,10 +36,10 @@ class ParseJavaCode {
         }
 
         @Override
-        public void visit(MethodDeclaration methodDeclaration, Integer depth) {
-            codeInfo += String.format("%s %s\n", StringUtil.nTabs(depth), methodDeclaration.getName());
-            methodNames += String.format("%s\n", methodDeclaration.getName());
-            super.visit(methodDeclaration, depth + 1);
+        public void visit(MethodDeclaration declaration, Integer depth) {
+            codeInfo += String.format("%s %s\n", StringUtil.nTabs(depth), declaration.getName());
+            methodNames += String.format("%s\n", declaration.getName());
+            super.visit(declaration, depth + 1);
         }
 
         @Override
