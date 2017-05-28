@@ -1,3 +1,4 @@
+import MyUtil.NodeListUtil;
 import MyUtil.OptionalUtil;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
@@ -15,13 +16,13 @@ import java.util.*;
  * Created by takeyuki on 17/05/27.
  */
 public class MethodVisitor extends VoidVisitorAdapter<Object> {
-    private List<MyMethod> methodsInfo = new ArrayList<>();
+    private ListMethod methodsInfo = new ListMethod();
 
     public MethodVisitor(CompilationUnit cu) {
         visit(cu,0);
     }
 
-    public List<MyMethod> getMethodsInfo() {
+    public ListMethod getMethodsInfo() {
         return methodsInfo;
     }
 
@@ -43,18 +44,7 @@ public class MethodVisitor extends VoidVisitorAdapter<Object> {
 
                             OptionalUtil.doIfPresent(variableDeclarator.getInitializer(), (Expression initializer) -> {
                                 if (initializer instanceof MethodCallExpr) {
-                                    // <scope>.<methodName>(<arguments>)
-                                    // e.g.)
-                                    // System.out.println("hello") => <System.out>.<println>(<"hello">)
-                                    MethodCallExpr methodCallExpr = (MethodCallExpr) initializer;
-
-                                    Optional<Expression> scopeOpt = methodCallExpr.getScope(); //必要(scope)
-                                    String scope = scopeOpt.isPresent() ? scopeOpt.get().toString() : "";
-
-                                    SimpleName methodName = methodCallExpr.getName(); //必要(methodName)
-                                    NodeList<Expression> arguments = methodCallExpr.getArguments(); //必要(arguments)
-
-                                    MyStatement statement = new MyStatement(variableName.toString(), scope, methodName.toString(), arguments);
+                                    MyStatement statement = makeStatement(variableName.toString(), (MethodCallExpr) initializer);
                                     statements.add(statement);
                                 }
                             });
@@ -65,17 +55,7 @@ public class MethodVisitor extends VoidVisitorAdapter<Object> {
                         Expression value = assignExpr.getValue();
 
                         if (value instanceof MethodCallExpr) {
-                            // <scope>.<methodName>(<arguments>)
-                            // e.g.)
-                            // System.out.println("hello") => <System.out>.<println>(<"hello">)
-                            MethodCallExpr methodCallExpr = (MethodCallExpr) value;
-                            Optional<Expression> scopeOpt = methodCallExpr.getScope();
-                            String scope = scopeOpt.isPresent() ? scopeOpt.get().toString() : "";
-
-                            SimpleName methodName = methodCallExpr.getName();
-                            NodeList<Expression> arguments = methodCallExpr.getArguments();
-
-                            MyStatement statement = new MyStatement(target.toString(), methodName.toString(), scope, arguments);
+                            MyStatement statement = makeStatement(target.toString(), (MethodCallExpr) value);
                             statements.add(statement);
                         }
                     }
@@ -93,5 +73,23 @@ public class MethodVisitor extends VoidVisitorAdapter<Object> {
         method.printMethod();
 
         super.visit(declaration, arg);
+    }
+
+    private MyStatement makeStatement(String variableName, MethodCallExpr methodCallExpr){
+        // <scope>.<methodName>(<arguments>)
+        // e.g.)
+        // System.out.println("hello") => <System.out>.<println>(<"hello">)
+
+        Optional<Expression> scopeOpt = methodCallExpr.getScope();
+        String scope = scopeOpt.isPresent() ? scopeOpt.get().toString() : "";
+
+        SimpleName methodName = methodCallExpr.getName();
+        NodeList<Expression> arguments = methodCallExpr.getArguments();
+
+        return new MyStatement(
+                variableName,
+                methodName.toString(),
+                scope,
+                NodeListUtil.toArrayListString(arguments));
     }
 }

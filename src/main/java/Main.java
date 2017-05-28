@@ -26,14 +26,17 @@ public class Main {
     }
 
     private static void findMethodInfo() throws FileNotFoundException {
-        FileInputStream fileInputStream = new FileInputStream("./infiles/Simple.java");
-//        FileInputStream fileInputStream = new FileInputStream("./infiles/twitter4j-4.0.4/twitter4j-core/src/main/java/twitter4j/Query.java");
+//        FileInputStream fileInputStream = new FileInputStream("./infiles/Simple.java");
+        FileInputStream fileInputStream = new FileInputStream("./infiles/twitter4j-4.0.4/twitter4j-core/src/main/java/twitter4j/Query.java");
         CompilationUnit cu = JavaParser.parse(fileInputStream);
 
         MethodVisitor methodVisitor = new MethodVisitor(cu);
-        List<MyMethod> methodsInfo = methodVisitor.getMethodsInfo();
+        ListMethod methodsInfo = methodVisitor.getMethodsInfo();
 
-        //TODO crossをもとめる
+        for(int i=0; i < methodsInfo.length(); i++){
+            methodsInfo.get(i).findCrossMethod(methodsInfo);
+        }
+
     }
 
     private static void parseAndWriteFile(String apiFilePass) throws IOException{

@@ -12,7 +12,7 @@ public class StringUtil {
         return out;
     }
 
-    static String nTabs(int times) {
+    public static String nTabs(int times) {
         return stringTimes("\t", times);
     }
 }
