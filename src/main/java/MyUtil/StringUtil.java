@@ -1,3 +1,5 @@
+package MyUtil;
+
 /**
  * Created by takeyuki on 17/04/29.
  */

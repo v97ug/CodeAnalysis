@@ -1,11 +1,10 @@
+import MyUtil.FileUtil;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Ryo on 2017/04/21.
@@ -14,15 +13,27 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) throws IOException{
-        Process p = Runtime.getRuntime().exec("find ./infiles/ -name *.java");
-        BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String apiFilePass;
-        while ((apiFilePass = br.readLine()) != null) {
-            System.out.println(apiFilePass);
+//        Process p = Runtime.getRuntime().exec("find ./infiles/ -name *.java");
+//        BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//        String apiFilePass;
+//        while ((apiFilePass = br.readLine()) != null) {
+//            System.out.println(apiFilePass);
+//
+////            parseAndWriteFile(apiFilePass);
+////            writeMethodInfo(apiFilePass);
+//        }
+        findMethodInfo();
+    }
 
-            parseAndWriteFile(apiFilePass);
-            writeMethodInfo(apiFilePass);
-        }
+    private static void findMethodInfo() throws FileNotFoundException {
+        FileInputStream fileInputStream = new FileInputStream("./infiles/Simple.java");
+//        FileInputStream fileInputStream = new FileInputStream("./infiles/twitter4j-4.0.4/twitter4j-core/src/main/java/twitter4j/Query.java");
+        CompilationUnit cu = JavaParser.parse(fileInputStream);
+
+        MethodVisitor methodVisitor = new MethodVisitor(cu);
+        List<MyMethod> methodsInfo = methodVisitor.getMethodsInfo();
+
+        //TODO crossをもとめる
     }
 
     private static void parseAndWriteFile(String apiFilePass) throws IOException{
