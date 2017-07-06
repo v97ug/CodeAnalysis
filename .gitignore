@@ -10,3 +10,7 @@ result/*
 !result/all-method-names.txt
 !result/all-file-cat.sh
 result2/*
+
+# パースできなかったAPI ./infiles/legacy-jclouds/archetypes/rest-client-archetype/src/main/resources/archetype-resources/src/main/java/__providerName__Client.java
+infiles/legacy-jclouds/
+infiles/storio/
