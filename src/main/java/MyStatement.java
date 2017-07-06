@@ -37,6 +37,10 @@ public class MyStatement {
         return methodParams;
     }
 
+    public String getMethodParamsString(){
+        return ArrayListUtil.join(methodParams, " ");
+    }
+
     public void printStatement(){
         System.out.printf("%s = %s.%s(%s)",varName, scope, methodName, ArrayListUtil.join(methodParams));
     }

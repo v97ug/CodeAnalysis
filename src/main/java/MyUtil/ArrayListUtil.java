@@ -13,4 +13,12 @@ public class ArrayListUtil {
         }
         return joinStr;
     }
+
+    public static <T> String join(ArrayList<T> arrayList, String joinOp){
+        String joinStr = "";
+        for (T t : arrayList){
+            joinStr += t.toString() + joinOp;
+        }
+        return joinStr;
+    }
 }

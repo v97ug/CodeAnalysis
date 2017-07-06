@@ -11,18 +11,26 @@ import java.util.List;
  */
 
 public class Main {
+    private static String apiMethods = "";
 
     public static void main(String[] args) throws IOException{
-//        Process p = Runtime.getRuntime().exec("find ./infiles/ -name *.java");
-//        BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//        String apiFilePass;
-//        while ((apiFilePass = br.readLine()) != null) {
+        Process p = Runtime.getRuntime().exec("find ./infiles/ -name *.java");
+        BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String apiFilePass;
+        while ((apiFilePass = br.readLine()) != null) {
 //            System.out.println(apiFilePass);
-//
-////            parseAndWriteFile(apiFilePass);
-////            writeMethodInfo(apiFilePass);
+//            System.out.println(apiFilePass);
+            findMethodInfo(apiFilePass);
+
+//            parseAndWriteFile(apiFilePass);
+//            writeMethodInfo(apiFilePass);
+        }
+
+//        try {
+//            FileUtil.writeFile("apiNames.txt", apiMethods);
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
-        findMethodInfo();
     }
 
     private static void findMethodInfo() throws FileNotFoundException {
@@ -38,6 +46,23 @@ public class Main {
         }
 
     }
+
+    public static void findMethodInfo(String apiFile) throws FileNotFoundException{
+        FileInputStream fileInputStream = new FileInputStream(apiFile);
+        CompilationUnit cu = JavaParser.parse(fileInputStream);
+
+        MethodVisitor methodVisitor = new MethodVisitor(cu);
+        ListMethod methodsInfo = methodVisitor.getMethodsInfo();
+
+
+        for(int i=0; i < methodsInfo.length(); i++){
+            apiMethods += methodsInfo.get(i).getMethodName() + " ";
+//            if(methodsInfo.get(i).getMethodName().equals("size"))
+//                System.out.println("size is appeared!!!!!!!!!!!!!!!!!!!! in " + apiFile);
+            methodsInfo.get(i).findCrossMethod(methodsInfo);
+        }
+    }
+
 
     private static void parseAndWriteFile(String apiFilePass) throws IOException{
         FileInputStream fileInputStream = new FileInputStream(apiFilePass);

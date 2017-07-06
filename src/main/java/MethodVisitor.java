@@ -28,7 +28,7 @@ public class MethodVisitor extends VoidVisitorAdapter<Object> {
 
     @Override
     public void visit(MethodDeclaration declaration, Object arg) {
-        System.out.printf("VISIT MethodDeclaration: %s, %s\n", declaration.getName(), arg);
+//        System.out.printf("VISIT MethodDeclaration: %s, %s\n", declaration.getName(), arg);
 
         List<MyStatement> statements = new ArrayList<>();
 
@@ -70,7 +70,7 @@ public class MethodVisitor extends VoidVisitorAdapter<Object> {
                 statements
         );
         methodsInfo.add(method);
-        method.printMethod();
+//        method.printMethod();
 
         super.visit(declaration, arg);
     }

@@ -61,12 +61,15 @@ public class MyMethod {
                     MyMethod method2 = methods.serchFromName(methodName2);
 
                     if (method1 != null && method2 != null) {
-                        System.out.println("cross1 " + method1.getMethodName());
-                        System.out.println("cross2 " + method2.getMethodName());
+//                        System.out.println("cross1 " + method1.getMethodName());
+//                        System.out.println("cross2 " + method2.getMethodName());
                         method1.addCrossMethod(methodName1);
                         method1.addCrossMethod(methodName2);
                         method2.addCrossMethod(methodName1);
                         method2.addCrossMethod(methodName2);
+
+                        System.out.printf("%s %s %s", stmt.getVarName(), stmt.getMethodName(), stmt.getMethodParamsString());
+                        System.out.printf("%s %s %s", otherStmt.getVarName(), otherStmt.getMethodName(), otherStmt.getMethodParamsString());
                     }
                 }
             }
