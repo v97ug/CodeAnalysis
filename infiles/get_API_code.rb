@@ -1,12 +1,14 @@
 require 'open-uri'
 require 'nokogiri'
 
+NUM_API = 10
+
 def get_content(uri)
   charset, html = open(uri) { |f| [f.charset, f.read] }
   Nokogiri::HTML.parse(html, nil, charset)
 end
 
-for i in 1..10 do
+for i in 1..NUM_API do
   uri = "https://github.com/search?l=Java&o=desc&p=#{i}&q=API&s=stars&type=Repositories&utf8=%E2%9C%93"
 
   repository_names = get_content(uri).xpath('//*[@class="repo-list-item d-flex flex-justify-start py-4 public source"]/div/h3/a').map{|a| a.text}

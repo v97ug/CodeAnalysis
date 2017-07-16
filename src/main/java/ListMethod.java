@@ -2,7 +2,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 /**
- * Created by takeyuki on 17/05/28.
+ * Created by miygagi on 17/05/28. <br>
+ * ListMethod class is just wrap ArrayList<MyMethod>
+ * @author miyagi
  */
 public class ListMethod {
     private ArrayList<MyMethod> methodArray = new ArrayList<>();

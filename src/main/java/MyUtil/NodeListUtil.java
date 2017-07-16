@@ -6,7 +6,8 @@ import com.github.javaparser.ast.NodeList;
 import java.util.ArrayList;
 
 /**
- * Created by takeyuki on 17/05/28.
+ * Created by miyagi on 17/05/28.
+ * @author miyagi
  */
 public class NodeListUtil {
     public static <T extends Node> String joinComma(NodeList<T> nodeList){

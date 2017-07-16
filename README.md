@@ -15,3 +15,6 @@ $ ruby get_API_code.rb
 $ ruby join.rb
 ```
 を実行して、`join-result/parsed-joined.txt`がword embeddingの入力ファイルとなる。
+
+# おまけ
+`javadoc/index.html` を開くと、javadocが見られる。

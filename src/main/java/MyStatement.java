@@ -1,12 +1,11 @@
 import MyUtil.ArrayListUtil;
-import MyUtil.NodeListUtil;
-import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.expr.Expression;
 
 import java.util.ArrayList;
 
 /**
- * Created by takeyuki on 17/05/27.
+ * Created by miyagi on 17/05/27. <br>
+ * MyStatement class is one statement in method. For example, varName = scope.methodName(methodParams);
+ * @author miyagi
  */
 public class MyStatement {
     private String varName;
@@ -42,10 +41,10 @@ public class MyStatement {
     }
 
     public void printStatement(){
-        System.out.printf("%s = %s.%s(%s)",varName, scope, methodName, ArrayListUtil.join(methodParams));
+        System.out.printf("%s = %s.%s(%s)",varName, scope, methodName, ArrayListUtil.joinComma(methodParams));
     }
 
     public String showStatement(){
-        return String.format("%s = %s.%s(%s)",varName, scope, methodName, ArrayListUtil.join(methodParams));
+        return String.format("%s = %s.%s(%s)",varName, scope, methodName, ArrayListUtil.joinComma(methodParams));
     }
 }

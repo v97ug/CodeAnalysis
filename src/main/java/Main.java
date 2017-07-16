@@ -1,13 +1,14 @@
-import MyUtil.FileUtil;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by Ryo on 2017/04/21.
+ * Created by miyagi on 2017/04/21.
+ * This is Main class. <br> <br>
+ * 1. Import about 100 API source code (Java language). <br>
+ * 2. Find Cross method in each API. <br>
+ * @author miyagi
  */
 
 public class Main {
@@ -19,114 +20,57 @@ public class Main {
         String apiFilePass;
         while ((apiFilePass = br.readLine()) != null) {
 //            System.out.println(apiFilePass);
-//            System.out.println(apiFilePass);
             findMethodInfo(apiFilePass);
-
-//            parseAndWriteFile(apiFilePass);
-//            writeMethodInfo(apiFilePass);
         }
-
-//        try {
-//            FileUtil.writeFile("apiNames.txt", apiMethods);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+//        FileUtil.writeFile("apiNames.txt", apiMethods);
     }
 
-    private static void findMethodInfo() throws FileNotFoundException {
-//        FileInputStream fileInputStream = new FileInputStream("./infiles/Simple.java");
-        FileInputStream fileInputStream = new FileInputStream("./infiles/twitter4j-4.0.4/twitter4j-core/src/main/java/twitter4j/Query.java");
-        CompilationUnit cu = JavaParser.parse(fileInputStream);
-
-        MethodVisitor methodVisitor = new MethodVisitor(cu);
-        ListMethod methodsInfo = methodVisitor.getMethodsInfo();
-
-        for(int i=0; i < methodsInfo.length(); i++){
-            methodsInfo.get(i).findCrossMethod(methodsInfo);
-        }
-
-    }
-
-    public static void findMethodInfo(String apiFile) throws FileNotFoundException{
+    /**
+     * @param apiFile one Java file name in certain API
+     */
+    private static void findMethodInfo(String apiFile) throws FileNotFoundException{
         FileInputStream fileInputStream = new FileInputStream(apiFile);
         CompilationUnit cu = JavaParser.parse(fileInputStream);
 
         MethodVisitor methodVisitor = new MethodVisitor(cu);
         ListMethod methodsInfo = methodVisitor.getMethodsInfo();
 
-
         for(int i=0; i < methodsInfo.length(); i++){
             apiMethods += methodsInfo.get(i).getMethodName() + " ";
-//            if(methodsInfo.get(i).getMethodName().equals("size"))
-//                System.out.println("size is appeared!!!!!!!!!!!!!!!!!!!! in " + apiFile);
-            methodsInfo.get(i).findCrossMethod(methodsInfo);
+            findCrossMethod(methodsInfo.get(i), methodsInfo);
         }
     }
 
+    /**
+     * Find Cross method. <br>
+     * varName = scope.methodName1(param1, param2, ..) <br>
+     * varName2 = scope.methodName2(param1, param2, ..) <br>
+     * This method occurs side effect (Output).
+     * @param method one Method in certain API
+     * @param methods other all Methods in certain API
+     */
+    private static void findCrossMethod(MyMethod method, ListMethod methods) {
+        // <varName> = <scope>.<methodName1>(<param1>,<param2>,..)
+        // <varName2> = <scope>.<methodName2>(<param1>,<param2>,..)
+        for (MyStatement stmt : method.getBodyStmt()) {
+            for (MyStatement otherStmt : method.getBodyStmt()) {
+                if (otherStmt.getMethodParams().contains(stmt.getVarName())) {
+                    String methodName1 = stmt.getMethodName();
+                    String methodName2 = otherStmt.getMethodName();
 
-    private static void parseAndWriteFile(String apiFilePass) throws IOException{
-        FileInputStream fileInputStream = new FileInputStream(apiFilePass);
-        CompilationUnit cu = JavaParser.parse(fileInputStream);
+                    //nullかも
+                    MyMethod method1 = methods.serchFromName(methodName1);
+                    MyMethod method2 = methods.serchFromName(methodName2);
 
-        ParseJavaCode parseJavaCode = new ParseJavaCode(cu);
-        String codeInfo = parseJavaCode.getCodeInfo();
-        String methodNames = parseJavaCode.getMethodNames();
+                    if (method1 != null && method2 != null) {
+                        method1.addCrossMethod(methodName2);
+                        method2.addCrossMethod(methodName1);
 
-        try {
-            mkdirAndWriteFile(apiFilePass, codeInfo, methodNames);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+                        System.out.printf("%s %s %s", stmt.getVarName(), stmt.getMethodName(), stmt.getMethodParamsString());
+                        System.out.printf("%s %s %s", otherStmt.getVarName(), otherStmt.getMethodName(), otherStmt.getMethodParamsString());
+                    }
+                }
+            }
         }
     }
-
-    private static void writeMethodInfo(String apiFilePass) throws IOException{
-        FileInputStream fileInputStream = new FileInputStream(apiFilePass);
-        CompilationUnit cu = JavaParser.parse(fileInputStream);
-
-        ParseMethodInfo parseMethodInfo = new ParseMethodInfo(cu);
-
-        ArrayList<String> methodInfo = parseMethodInfo.getMethodsInfo();
-        try {
-            mkdirAndWriteFile(apiFilePass, methodInfo);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void mkdirAndWriteFile(String apiFilePass, ArrayList<String> methodInfoList)
-            throws IOException, InterruptedException{
-        // 例えば、./infiles/hellocharts-android/...../LineChartActivity.javaのようになってる
-        String[] passSplited = apiFilePass.split("/");
-        String apiName = passSplited[2];
-        String javaName = passSplited[passSplited.length - 1].split("\\.")[0];
-
-        //ディレクトリ作成
-        Process process = Runtime.getRuntime().exec(String.format("mkdir -p result2/all-files/%s/%s/", apiName, javaName));
-        process.waitFor(); // プロセスの終了を待つ
-
-        for(String methodInfo : methodInfoList) {
-            String methodInfoFile = String.format("result2/all-files/%s/%s/%s.txt", apiName, javaName, methodInfo.split("\n")[1]);
-            FileUtil.writeFile(methodInfoFile, methodInfo);
-        }
-    }
-
-    private static void mkdirAndWriteFile(String apiFilePass, String codeInfo, String methodNames)
-            throws IOException, InterruptedException{
-        // 例えば、./infiles/hellocharts-android/...../LineChartActivity.javaのようになってる
-        String[] passSplited = apiFilePass.split("/");
-        String apiName = passSplited[2];
-        String javaName = passSplited[passSplited.length - 1].split("\\.")[0];
-
-        //ディレクトリ作成
-        Process process = Runtime.getRuntime().exec(String.format("mkdir -p result/all-files/%s/%s/", apiName, javaName));
-        process.waitFor(); // プロセスの終了を待つ
-
-        //ファイル出力
-        String javaParseedFile = String.format("result/all-files/%s/%s/java-parsed.txt", apiName,javaName);
-        String methodNamesFile = String.format("result/all-files/%s/%s/method-names.txt", apiName, javaName);
-        FileUtil.writeFile(javaParseedFile, codeInfo);
-        FileUtil.writeFile(methodNamesFile, methodNames);
-    }
-
-
 }

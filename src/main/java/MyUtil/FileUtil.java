@@ -3,7 +3,8 @@ package MyUtil;
 import java.io.*;
 
 /**
- * Created by takeyuki on 17/05/25.
+ * Created by miyagi on 17/05/25.
+ * @author miyagi
  */
 public class FileUtil {
     public static void writeFile(String filePass, String contents) throws IOException {
