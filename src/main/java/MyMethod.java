@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by takeyuki on 17/05/27.
+ * Created by miyagi on 17/05/27.
+ * MyMethod class is to assign one method information in API.
+ * @author miyagi
  */
 public class MyMethod {
     private String returnType;
@@ -31,6 +33,10 @@ public class MyMethod {
         return methodName;
     }
 
+    public List<MyStatement> getBodyStmt() {
+        return bodyStmt;
+    }
+
     public void addCrossMethod(String crossMethod){
         crossMethods.add(crossMethod);
     }
@@ -45,34 +51,5 @@ public class MyMethod {
             joinStmt += stmt.showStatement() + "\n";
         }
         System.out.printf("%s, %s, %s, \n%s\n\n", returnType, methodName, joinParamsStr, joinStmt);
-    }
-
-    public void findCrossMethod(ListMethod methods) {
-        // <varName> = <scope>.<methodName1>(<param1>,<param2>,..)
-        // <varName2> = <scope>.<methodName2>(<param1>,<param2>,..)
-        for (MyStatement stmt : bodyStmt) {
-            for (MyStatement otherStmt : bodyStmt) {
-                if (otherStmt.getMethodParams().contains(stmt.getVarName())) {
-                    String methodName1 = stmt.getMethodName();
-                    String methodName2 = otherStmt.getMethodName();
-
-                    //nullかも
-                    MyMethod method1 = methods.serchFromName(methodName1);
-                    MyMethod method2 = methods.serchFromName(methodName2);
-
-                    if (method1 != null && method2 != null) {
-//                        System.out.println("cross1 " + method1.getMethodName());
-//                        System.out.println("cross2 " + method2.getMethodName());
-                        method1.addCrossMethod(methodName1);
-                        method1.addCrossMethod(methodName2);
-                        method2.addCrossMethod(methodName1);
-                        method2.addCrossMethod(methodName2);
-
-                        System.out.printf("%s %s %s", stmt.getVarName(), stmt.getMethodName(), stmt.getMethodParamsString());
-                        System.out.printf("%s %s %s", otherStmt.getVarName(), otherStmt.getMethodName(), otherStmt.getMethodParamsString());
-                    }
-                }
-            }
-        }
     }
 }

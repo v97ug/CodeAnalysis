@@ -13,9 +13,14 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import java.util.*;
 
 /**
- * Created by takeyuki on 17/05/27.
+ * Created by miyagi on 17/05/27.
+ * Parse method information. <br>
+ * @author miyagi
  */
 public class MethodVisitor extends VoidVisitorAdapter<Object> {
+    /**
+     * "methodsInfo" is assigned all method information in one Java file.
+     */
     private ListMethod methodsInfo = new ListMethod();
 
     public MethodVisitor(CompilationUnit cu) {
@@ -26,6 +31,9 @@ public class MethodVisitor extends VoidVisitorAdapter<Object> {
         return methodsInfo;
     }
 
+    /**
+     * Add all method information in one Java file.
+     */
     @Override
     public void visit(MethodDeclaration declaration, Object arg) {
 //        System.out.printf("VISIT MethodDeclaration: %s, %s\n", declaration.getName(), arg);
@@ -75,11 +83,13 @@ public class MethodVisitor extends VoidVisitorAdapter<Object> {
         super.visit(declaration, arg);
     }
 
+    /**
+     * "scope"."methodName"(arguments)
+     * <br>
+     * e.g.) <br>
+     * System.out.println("hello") => "System.out"."println"(<"hello">)
+     */
     private MyStatement makeStatement(String variableName, MethodCallExpr methodCallExpr){
-        // <scope>.<methodName>(<arguments>)
-        // e.g.)
-        // System.out.println("hello") => <System.out>.<println>(<"hello">)
-
         Optional<Expression> scopeOpt = methodCallExpr.getScope();
         String scope = scopeOpt.isPresent() ? scopeOpt.get().toString() : "";
 

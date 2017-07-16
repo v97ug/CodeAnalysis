@@ -6,7 +6,9 @@ import com.github.javaparser.ast.expr.Expression;
 import java.util.ArrayList;
 
 /**
- * Created by takeyuki on 17/05/27.
+ * Created by miyagi on 17/05/27. <br>
+ * MyStatement class is one statement in method. For example, varName = scope.methodName(methodParams);
+ * @author miyagi
  */
 public class MyStatement {
     private String varName;
