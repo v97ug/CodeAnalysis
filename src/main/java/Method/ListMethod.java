@@ -1,9 +1,10 @@
+package Method;
+
 import java.util.ArrayList;
-import java.util.Optional;
 
 /**
  * Created by miygagi on 17/05/28. <br>
- * ListMethod class is just wrap ArrayList<MyMethod>
+ * Method.MyUtil.ListMethod class is just wrap ArrayList<Method.MyUtil.MyMethod>
  * @author miyagi
  */
 public class ListMethod {

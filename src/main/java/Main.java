@@ -1,3 +1,6 @@
+import Method.ListMethod;
+import Method.MyMethod;
+import Method.MyStatement;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
@@ -50,8 +53,6 @@ public class Main {
      * @param methods other all Methods in certain API
      */
     private static void findCrossMethod(MyMethod method, ListMethod methods) {
-        // <varName> = <scope>.<methodName1>(<param1>,<param2>,..)
-        // <varName2> = <scope>.<methodName2>(<param1>,<param2>,..)
         for (MyStatement stmt : method.getBodyStmt()) {
             for (MyStatement otherStmt : method.getBodyStmt()) {
                 if (otherStmt.getMethodParams().contains(stmt.getVarName())) {

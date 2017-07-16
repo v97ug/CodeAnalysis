@@ -1,4 +1,4 @@
-package MyUtil;
+package Method.MyUtil;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;

@@ -1,10 +1,12 @@
-import MyUtil.ArrayListUtil;
+package Method;
+
+import Method.MyUtil.ArrayListUtil;
 
 import java.util.ArrayList;
 
 /**
  * Created by miyagi on 17/05/27. <br>
- * MyStatement class is one statement in method. For example, varName = scope.methodName(methodParams);
+ * Method.MyUtil.MyStatement class is one statement in method. For example, varName = scope.methodName(methodParams);
  * @author miyagi
  */
 public class MyStatement {

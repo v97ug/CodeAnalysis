@@ -1,14 +1,14 @@
+package Method;
+
 import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by miyagi on 17/05/27.
- * MyMethod class is to assign one method information in API.
+ * Method.MyUtil.MyMethod class is to assign one method information in API.
  * @author miyagi
  */
 public class MyMethod {

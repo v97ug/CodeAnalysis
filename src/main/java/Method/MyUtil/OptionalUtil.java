@@ -1,4 +1,4 @@
-package MyUtil;
+package Method.MyUtil;
 
 import java.util.Optional;
 import java.util.function.Consumer;

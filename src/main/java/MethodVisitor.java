@@ -1,5 +1,5 @@
-import MyUtil.NodeListUtil;
-import MyUtil.OptionalUtil;
+import Method.*;
+import Method.MyUtil.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
